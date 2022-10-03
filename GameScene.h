@@ -23,6 +23,8 @@ private: // エイリアス
 
 private: // 静的メンバ変数
 	static const int debugTextTexNumber = 0;
+	Sprite* sprite1 = nullptr;
+	Sprite* sprite2 = nullptr;
 
 public: // メンバ関数
 
