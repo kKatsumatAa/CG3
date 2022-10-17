@@ -51,6 +51,13 @@ private://01_03
 	//頂点インデックス配列
 	static unsigned short indices[indexCount];
 
+//01_06
+	//ビルボード行列
+	static XMMATRIX matBillboard;
+	//y軸回りビルボード
+	static XMMATRIX matBillboardY;
+
+
 public: // 静的メンバ関数
 	/// <summary>
 	/// 静的初期化
