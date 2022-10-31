@@ -63,5 +63,7 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	Object3d* object3d[50];
+
+	DebugText debugTextInfo;
 };
 

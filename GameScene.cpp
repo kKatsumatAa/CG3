@@ -57,7 +57,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	{
 		object3d[i] = Object3d::Create();
 		object3d[i]->SetPosition({ pos(engine),0 ,pos(engine) });
-		object3d[i]->Update();
+		object3d[i]->Update(input);
 	}
 }
 
@@ -101,7 +101,7 @@ void GameScene::Update()
 
 	for (int i = 0; i < 50; i++)
 	{
-		object3d[i]->Update();
+		object3d[i]->Update(input);
 	}
 }
 
@@ -154,7 +154,7 @@ void GameScene::Draw()
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
+	debugText.Print("billboard_Mode:[SPACE]", 10, 10, 1.0f);
 	// デバッグテキストの描画
 	debugText.DrawAll(cmdList);
 

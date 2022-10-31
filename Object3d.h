@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include"Input.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -56,6 +57,8 @@ private://01_03
 	static XMMATRIX matBillboard;
 	//y軸回りビルボード
 	static XMMATRIX matBillboardY;
+	Input* input;
+	bool isYBillboard = false;
 
 
 public: // 静的メンバ関数
@@ -201,7 +204,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	void Update(Input* input);
 
 	/// <summary>
 	/// 描画

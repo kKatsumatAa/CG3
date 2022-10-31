@@ -716,7 +716,7 @@ bool Object3d::Initialize()
 	return true;
 }
 
-void Object3d::Update()
+void Object3d::Update(Input* input)
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
@@ -737,7 +737,15 @@ void Object3d::Update()
 	matWorld *= matScale; // ワールド行列にスケーリングを反映
 	matWorld *= matRot; // ワールド行列に回転を反映
 		//ビルボード
-	matWorld *= matBillboardY;
+	if (input->TriggerKey(DIK_SPACE))
+	{
+		if (isYBillboard)isYBillboard = false;
+		else             isYBillboard = true;
+	}
+	if (isYBillboard)
+		matWorld *= matBillboardY;
+	else
+		matWorld *= matBillboard;
 	//matWorld *= matBillboard;
 	
 	matWorld *= matTrans; // ワールド行列に平行移動を反映
