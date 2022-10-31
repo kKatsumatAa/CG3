@@ -11,3 +11,12 @@ struct VSOutput
 	float3 normal :NORMAL; // 法線ベクトル
 	float2 uv  :TEXCOORD; // uv値
 };
+
+
+//ジオメトリシェーダーからピクセルシェーダーへの出力
+struct GSOutput
+{
+	float4 svpos : SV_POSITION;//システム用頂点座標
+	float3 normal : NORMAL;
+	float2 uv : TEXCOORD;
+};
