@@ -11,10 +11,9 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete spriteBG;
-	for (int i = 0; i < 50; i++)
-	{
-		delete object3d[i];
-	}
+
+	delete object3d;
+
 	delete sprite1;
 	delete sprite2;
 }
@@ -45,20 +44,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	sprite1 = Sprite::Create(2, { 0,0 });
 	sprite2 = Sprite::Create(2, { 500,500 }, { 1,0,0,1 }, { 0,0 }, false, true);
 
-	//乱数シード生成器
-	std::random_device seed_gen;
-	//メルセンヌツイスター
-	std::mt19937_64 engine(seed_gen());
-	//vecランダム
-	std::uniform_real_distribution<float> pos(-20.0f, 20.0f);
-
 	// 3Dオブジェクト生成
-	for (int i = 0; i < 50; i++)
-	{
-		object3d[i] = Object3d::Create();
-		object3d[i]->SetPosition({ pos(engine),0 ,pos(engine) });
-		object3d[i]->Update(input);
-	}
+
+		object3d = Object3d::Create();
+		object3d->SetPosition({ 0,0 ,0 });
+		object3d->Update(input);
 }
 
 void GameScene::Update()
@@ -99,10 +89,9 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); }
 	}
 
-	for (int i = 0; i < 50; i++)
-	{
-		object3d[i]->Update(input);
-	}
+
+	object3d->Update(input);
+
 }
 
 void GameScene::Draw()
@@ -133,10 +122,7 @@ void GameScene::Draw()
 	Object3d::PreDraw(cmdList);
 
 	// 3Dオブクジェクトの描画
-	for (int i = 0; i < 50; i++)
-	{
-		object3d[i]->Draw();
-	}
+	object3d->Draw();
 
 
 	/// <summary>
@@ -154,7 +140,6 @@ void GameScene::Draw()
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	debugText.Print("billboard_Mode:[SPACE]", 10, 10, 1.0f);
 	// デバッグテキストの描画
 	debugText.DrawAll(cmdList);
 
