@@ -10,6 +10,7 @@ struct VSOutput
 {
 	float4 pos : POSITION; // システム用頂点座標
 	float  scale : TEXCOORD;//スケール
+	float4 color : COLOR;//色
 };
 
 

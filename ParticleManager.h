@@ -28,6 +28,7 @@ public: // サブクラス
 	{
 		XMFLOAT3 pos; // xyz座標
 		float scale;
+		XMFLOAT4 color;
 	};
 
 	// 定数バッファ用データ構造体
@@ -59,6 +60,12 @@ public: // サブクラス
 		float s_scale = 1.0f;
 		//最終値
 		float e_scale = 0.0f;
+		//
+		XMFLOAT4 color = {1.0f,1.0f,1.0f,1.0f};
+		//
+		XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
+		//
+		XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,1.0f };
 	};
 
 private: // 定数
@@ -237,7 +244,7 @@ public: // メンバ関数
 	/// <param name="startScale"></param>
 	/// <param name="endScale"></param>
 	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float startScale, float endScale);
+		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
