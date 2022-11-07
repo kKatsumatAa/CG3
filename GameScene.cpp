@@ -49,13 +49,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	particleM = ParticleManager::Create();
 	particleM->Update(input);
 
-
+	particleM->SetEye({ 0, 0, -30 });
 }
 
 int count = 0;
+int count2 = 0;
 void GameScene::Update()
 {
 	count++;
+
+	if (input->TriggerKey(DIK_SPACE))
+	{
+		count2++;
+		if (count2 >= 2)count2 = 0;
+	}
+
+	debugText.Print("SPACE:mode", 10, 10, 1.0f);
+
+	if (count2 == 0) debugText.Print("colorful", 10, 30, 1.0f);
+	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
+	
 
 	if (count % 5 == 0)
 	{
@@ -80,9 +93,20 @@ void GameScene::Update()
 			const float md_acc = 0.001f;
 			acc.y = -(float)rand() / RAND_MAX * md_acc;
 
-			//
-			particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
-				, { 1.0f,1.0f,1.0f,1.0f }, { 0,0,0,0 });
+			//色
+			XMFLOAT4 color{};
+			const float md_color = 1.0f;
+			color.x = (float)rand() / RAND_MAX * md_color;
+			color.y = (float)rand() / RAND_MAX * md_color;
+			color.z = (float)rand() / RAND_MAX * md_color;
+			color.w = (float)rand() / RAND_MAX * md_color;
+
+			if (count2 == 0)
+				particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
+					, color, color);
+			else if (count2 == 1)
+				particleM->Add(180, pos, vel, acc, 1.0f, 0.0f
+					, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
 		}
 	}
 
@@ -94,24 +118,6 @@ void GameScene::Update()
 
 		sprite1->SetPosition(pos);
 	}
-
-
-	//// オブジェクト移動
-	//if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
-	//{
-	//	// 現在の座標を取得
-
-	//	XMFLOAT3 position = object3d->GetPosition();
-
-	//	// 移動後の座標を計算
-	//	if (input->PushKey(DIK_UP)) { position.y += 1.0f; }
-	//	else if (input->PushKey(DIK_DOWN)) { position.y -= 1.0f; }
-	//	if (input->PushKey(DIK_RIGHT)) { position.x += 1.0f; }
-	//	else if (input->PushKey(DIK_LEFT)) { position.x -= 1.0f; }
-
-	//	// 座標の変更を反映
-	//	object3d->SetPosition(position);
-	//}
 
 	// カメラ移動
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))

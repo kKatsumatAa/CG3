@@ -267,7 +267,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
-		{ // スケール(便宜上TEXCOORD)
+		{ // 色
 			"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
@@ -600,17 +600,13 @@ void ParticleManager::Update(Input* input)
 		it->scale = (it->e_scale - it->s_scale) / f;
 		it->scale += it->s_scale;
 
-		it->color.x = (it->e_color.x - it->s_color.x) / f;
-		it->color.x += it->s_color.x;
+		//色
+		f = (float)it->frame / it->num_frame;
 
-		it->color.y = (it->e_color.y - it->s_color.y) / f;
-		it->color.y += it->s_color.y;
-
-		it->color.z = (it->e_color.z - it->s_color.z) / f;
-		it->color.z += it->s_color.z;
-
-		it->color.w = (it->e_color.w - it->s_color.w) / f;
-		it->color.w += it->s_color.w;
+		it->color.x = it->s_color.x + (it->e_color.x - it->s_color.x) * f;
+		it->color.y = it->s_color.y + (it->e_color.y - it->s_color.y) * f;
+		it->color.z = it->s_color.z + (it->e_color.z - it->s_color.z) * f;
+		it->color.w = it->s_color.w + (it->e_color.w - it->s_color.w) * f;
 	}
 
 	//頂点バッファへデータ転送
