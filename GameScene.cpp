@@ -48,6 +48,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	particleM = ParticleManager::Create();
 	particleM->Update(input);
+
+	for (int i = 0; i < 100; i++)
+	{
+		//XYZ全て[-5.0f~+5.0f]でランダムに分布
+		const float md_pos = 10.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+
+		//XYZ全て[-0.05~+0.05f]でランダムに分布
+		const float md_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+
+		//重力に見立ててYのみ[-0.001f~0]でランダムに
+		XMFLOAT3 acc{};
+		const float md_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * md_acc;
+
+		//
+		particleM->Add(60, pos, vel, acc);
+	}
 }
 
 void GameScene::Update()
@@ -102,7 +127,7 @@ void GameScene::Draw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-	//spriteBG->Draw();
+	spriteBG->Draw();
 	/*sprite1->Draw();
 	sprite2->Draw();*/
 

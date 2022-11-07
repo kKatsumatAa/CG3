@@ -276,14 +276,20 @@ void ParticleManager::InitializeGraphicsPipeline()
 	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
-	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	//加算合成
+	/*blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
+	//減算合成
+	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
@@ -346,7 +352,7 @@ void ParticleManager::LoadTexture()
 	ScratchImage scratchImg{};
 
 	// WICテクスチャのロード
-	result = LoadFromWICFile(L"Resources/tex1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromWICFile(L"Resources/effect1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	ScratchImage mipChain{};
@@ -413,15 +419,6 @@ void ParticleManager::LoadTexture()
 void ParticleManager::CreateModel()
 {
 	HRESULT result = S_FALSE;
-
-	for (int i = 0; i < vertexCount; i++)
-	{
-		//XYZ全て[-5.0f~+5.0f]でランダムに分布
-		const float md_width = 10.0f;
-		vertices[i].pos.x = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
-		vertices[i].pos.y = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
-		vertices[i].pos.z = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
-	}
 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices));
 
@@ -616,4 +613,29 @@ void ParticleManager::Draw()
 	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
 	// 描画コマンド
 	cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+}
+
+void ParticleManager::Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel)
+{
+	//リストに要素を追加
+	particles.emplace_front();
+	//追加した要素の参照
+	Particle& p = particles.front();
+	//値のセット
+	p.position = pos;
+	p.velocity = velocity;
+	p.accel = accel;
+	p.num_frame = life;
+}
+
+
+//-----------------------------------------------------------------------------------------
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x + rhs.x;
+	result.y = lhs.y + rhs.y;
+	result.z = lhs.z + rhs.z;
+
+	return DirectX::XMFLOAT3(result);
 }
