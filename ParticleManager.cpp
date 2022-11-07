@@ -418,7 +418,9 @@ void ParticleManager::CreateModel()
 	{
 		//XYZ全て[-5.0f~+5.0f]でランダムに分布
 		const float md_width = 10.0f;
-		vertices[i].pos.x = (float)rand() / RAND_MAX * md_width - md_width
+		vertices[i].pos.x = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
+		vertices[i].pos.y = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
+		vertices[i].pos.z = (float)rand() / RAND_MAX * md_width - md_width / 2.0f;
 	}
 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices));
