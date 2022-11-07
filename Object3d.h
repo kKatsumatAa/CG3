@@ -23,17 +23,14 @@ private: // エイリアス
 
 public: // サブクラス
 	// 頂点データ構造体
-	struct VertexPosNormalUv
+	struct VertexPos
 	{
 		XMFLOAT3 pos; // xyz座標
-		XMFLOAT3 normal; // 法線ベクトル
-		XMFLOAT2 uv;  // uv座標
 	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferData
 	{
-		XMFLOAT4 color;	// 色 (RGBA)
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
 
@@ -47,7 +44,7 @@ private: // 定数
 
 private://01_03
 	//頂点データ配列
-	static VertexPosNormalUv vertices[vertexCount];
+	static VertexPos vertices[vertexCount];
 
 //01_06
 	//ビルボード行列
