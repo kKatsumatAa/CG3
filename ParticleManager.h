@@ -27,6 +27,7 @@ public: // サブクラス
 	struct VertexPos
 	{
 		XMFLOAT3 pos; // xyz座標
+		float scale;
 	};
 
 	// 定数バッファ用データ構造体
@@ -52,6 +53,12 @@ public: // サブクラス
 		int frame = 0;
 		//終了フレーム
 		int num_frame = 0;
+		//スケール
+		float scale = 1.0f;
+		//初期値
+		float s_scale = 1.0f;
+		//最終値
+		float e_scale = 0.0f;
 	};
 
 private: // 定数
@@ -69,8 +76,8 @@ private://01_03
 	//パーティクル配列
 	std::forward_list<Particle> particles;
 
-//01_06
-	//ビルボード行列
+	//01_06
+		//ビルボード行列
 	static XMMATRIX matBillboard;
 	//y軸回りビルボード
 	static XMMATRIX matBillboardY;
@@ -133,7 +140,7 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <param name="move">移動量</param>
 	static void CameraMoveVector(XMFLOAT3 move);
-	
+
 	/// <summary>
 	/// ベクトルによる視点移動
 	/// </summary>
@@ -227,7 +234,10 @@ public: // メンバ関数
 	/// <param name="pos"></param>
 	/// <param name="velocity"></param>
 	/// <param name="accel"></param>
-	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel);
+	/// <param name="startScale"></param>
+	/// <param name="endScale"></param>
+	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
+		float startScale, float endScale);
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
