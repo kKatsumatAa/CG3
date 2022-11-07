@@ -283,13 +283,13 @@ void ParticleManager::InitializeGraphicsPipeline()
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
 	//加算合成
-	/*blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_ONE;
-	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
-	//減算合成
-	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_ONE;
 	blenddesc.DestBlend = D3D12_BLEND_ONE;
+	//減算合成
+	/*blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
@@ -569,24 +569,46 @@ bool ParticleManager::Initialize()
 void ParticleManager::Update(Input* input)
 {
 	HRESULT result;
-	//XMMATRIX matScale, matRot, matTrans;
 
-	//// スケール、回転、平行移動行列の計算
-	//matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	//寿命が尽きたパーティクルを全削除
+	particles.remove_if([](Particle& x) {return x.frame >= x.num_frame; });
 
-		//ビルボード
-	/*if (input->TriggerKey(DIK_SPACE))
+	//全パーティクル更新
+	for (std::forward_list<Particle>::iterator it = particles.begin();
+		it != particles.end(); it++)
 	{
-		if (isYBillboard)isYBillboard = false;
-		else             isYBillboard = true;
+		//経過フレーム数をカウント
+		it->frame++;
+		//速度に加速度を加算
+		it->velocity = it->velocity + it->accel;
+		//速度による移動
+		it->position = it->position + it->velocity;
 	}
-	if (isYBillboard)
-		matWorld *= matBillboardY;
-	else
-		matWorld *= matBillboard;
-		matWorld *= matBillboard;*/
 
-		// 定数バッファへデータ転送
+	//頂点バッファへデータ転送
+	VertexPos* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	if (SUCCEEDED(result))
+	{
+		int count = 0;
+
+		//パーティクルの情報を1つずつ反映
+		for (std::forward_list<Particle>::iterator it = particles.begin();
+			it != particles.end(); it++)
+		{
+			if (count >= vertexCount) break;
+
+			//座標
+			vertMap->pos = it->position;
+			//次の頂点へ
+			vertMap++;
+			count++;
+		}
+
+		vertBuff->Unmap(0, nullptr);
+	}
+
+	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->mat = matView * matProjection;//行列の合成(worldは除外（最初からワールド座標で指定する）)
@@ -612,22 +634,26 @@ void ParticleManager::Draw()
 	// シェーダリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
 	// 描画コマンド
-	cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 
 void ParticleManager::Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel)
 {
-	//リストに要素を追加
-	particles.emplace_front();
-	//追加した要素の参照
-	Particle& p = particles.front();
-	//値のセット
-	p.position = pos;
-	p.velocity = velocity;
-	p.accel = accel;
-	p.num_frame = life;
-}
+	int a = std::distance(particles.begin(), particles.end());
 
+	if (std::distance(particles.begin(), particles.end()) < vertexCount)
+	{
+		//リストに要素を追加
+		particles.emplace_front();
+		//追加した要素の参照
+		Particle& p = particles.front();
+		//値のセット
+		p.position = pos;
+		p.velocity = velocity;
+		p.accel = accel;
+		p.num_frame = life;
+	}
+}
 
 //-----------------------------------------------------------------------------------------
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

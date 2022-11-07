@@ -49,6 +49,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	particleM = ParticleManager::Create();
 	particleM->Update(input);
 
+	
+}
+
+void GameScene::Update()
+{
 	for (int i = 0; i < 100; i++)
 	{
 		//XYZ全て[-5.0f~+5.0f]でランダムに分布
@@ -73,10 +78,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		//
 		particleM->Add(60, pos, vel, acc);
 	}
-}
 
-void GameScene::Update()
-{
 	//スペースキーを押していたら
 	if (input->PushKey(DIK_SPACE))
 	{
