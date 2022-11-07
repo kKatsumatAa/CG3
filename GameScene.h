@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 #include "Input.h"
 #include "Sprite.h"
-#include "ParticleManager.h"
+#include "Object3d.h"
 #include "DebugText.h"
 
 /// <summary>
@@ -62,7 +62,7 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 	Sprite* spriteBG = nullptr;
-	ParticleManager* particleM;
+	Object3d* object3d;
 
 	DebugText debugTextInfo;
 };
