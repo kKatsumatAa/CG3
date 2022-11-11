@@ -227,7 +227,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update(Input* input);
+	void Update();
 
 	/// <summary>
 	/// 描画

@@ -576,7 +576,7 @@ bool ParticleManager::Initialize()
 	return true;
 }
 
-void ParticleManager::Update(Input* input)
+void ParticleManager::Update()
 {
 	HRESULT result;
 

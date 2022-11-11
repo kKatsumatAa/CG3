@@ -47,7 +47,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	// 3Dオブジェクト生成
 
 	particleM = ParticleManager::Create();
-	particleM->Update(input);
+	particleM->Update();
 
 	particleM->SetEye({ 0, 0, -30 });
 }
@@ -61,53 +61,61 @@ void GameScene::Update()
 	if (input->TriggerKey(DIK_SPACE))
 	{
 		count2++;
-		if (count2 >= 2)count2 = 0;
+		if (count2 >= 3)count2 = 0;
 	}
 
 	debugText.Print("SPACE:mode", 10, 10, 1.0f);
 
 	if (count2 == 0) debugText.Print("colorful", 10, 30, 1.0f);
 	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
+	if (count2 == 2) debugText.Print("hanabi", 10, 30, 1.0f);
 	
 
-	if (count % 5 == 0)
+	if (count2 != 2)
 	{
-		for (int i = 0; i < 100; i++)
+		if (count % 5 == 0)
 		{
-			//XYZ全て[-5.0f~+5.0f]でランダムに分布
-			const float md_pos = 10.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			for (int i = 0; i < 100; i++)
+			{
+				//XYZ全て[-5.0f~+5.0f]でランダムに分布
+				const float md_pos = 10.0f;
+				XMFLOAT3 pos{};
+				pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+				pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+				pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
 
-			//XYZ全て[-0.05~+0.05f]でランダムに分布
-			const float md_vel = 0.1f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+				//XYZ全て[-0.05~+0.05f]でランダムに分布
+				const float md_vel = 0.1f;
+				XMFLOAT3 vel{};
+				vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+				vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+				vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 
-			//重力に見立ててYのみ[-0.001f~0]でランダムに
-			XMFLOAT3 acc{};
-			const float md_acc = 0.001f;
-			acc.y = -(float)rand() / RAND_MAX * md_acc;
+				//重力に見立ててYのみ[-0.001f~0]でランダムに
+				XMFLOAT3 acc{};
+				const float md_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * md_acc;
 
-			//色
-			XMFLOAT4 color{};
-			const float md_color = 1.0f;
-			color.x = (float)rand() / RAND_MAX * md_color;
-			color.y = (float)rand() / RAND_MAX * md_color;
-			color.z = (float)rand() / RAND_MAX * md_color;
-			color.w = (float)rand() / RAND_MAX * md_color;
+				//色
+				XMFLOAT4 color{};
+				const float md_color = 1.0f;
+				color.x = (float)rand() / RAND_MAX * md_color;
+				color.y = (float)rand() / RAND_MAX * md_color;
+				color.z = (float)rand() / RAND_MAX * md_color;
+				color.w = (float)rand() / RAND_MAX * md_color;
 
-			if (count2 == 0)
-				particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
-					, color, color);
-			else if (count2 == 1)
-				particleM->Add(180, pos, vel, acc, 1.0f, 0.0f
-					, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
+				if (count2 == 0)
+					particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
+						, color, color);
+				else if (count2 == 1)
+					particleM->Add(180, pos, vel, acc, 1.0f, 0.0f
+						, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
+			}
 		}
+	}
+	else if(count2==2)
+	{
+		hanabi.Update({0,0,0},0.6f,300);
 	}
 
 	//スペースキーを押していたら
@@ -129,7 +137,7 @@ void GameScene::Update()
 	}
 
 
-	particleM->Update(input);
+	particleM->Update();
 
 }
 
@@ -142,7 +150,7 @@ void GameScene::Draw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-	spriteBG->Draw();
+	//spriteBG->Draw();
 	/*sprite1->Draw();
 	sprite2->Draw();*/
 
@@ -162,6 +170,7 @@ void GameScene::Draw()
 
 	// 3Dオブクジェクトの描画
 	particleM->Draw();
+	hanabi.Draw();
 
 
 	/// <summary>

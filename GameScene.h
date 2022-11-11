@@ -6,6 +6,7 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 #include "DebugText.h"
+#include "Hanabi.h"
 
 /// <summary>
 /// ゲームシーン
@@ -63,6 +64,8 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleM;
+
+	Hanabi hanabi;
 
 	DebugText debugTextInfo;
 };
