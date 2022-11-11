@@ -58,16 +58,19 @@ void Hanabi::GenerateHanabi(XMFLOAT3 pos, float scale, int lifeTime)
 	}
 }
 
-void Hanabi::Update(XMFLOAT3 pos, float scale, int lifeTime)
+void Hanabi::Generate(XMFLOAT3 pos, float scale, int lifeTime)
 {
-	particleM->Update();
-
 	if (this->lifeTime <= 0)
 	{
 		GenerateHanabi(pos, scale, lifeTime);
 	}
 
 	this->lifeTime--;
+}
+
+void Hanabi::Update()
+{
+	particleM->Update();
 }
 
 void Hanabi::Draw()

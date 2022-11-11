@@ -7,6 +7,7 @@
 #include "ParticleManager.h"
 #include "DebugText.h"
 #include "Hanabi.h"
+#include "Snow.h"
 
 /// <summary>
 /// ゲームシーン
@@ -66,6 +67,10 @@ private: // メンバ変数
 	ParticleManager* particleM;
 
 	Hanabi hanabi;
+	Snow snow;
+
+	XMFLOAT3 hanabiPos = { 0,0,0 };
+	XMFLOAT3 snowPos = { 0,0,0 };
 
 	DebugText debugTextInfo;
 };

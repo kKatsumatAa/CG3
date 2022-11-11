@@ -1,9 +1,7 @@
 #pragma once
 #include"ParticleManager.h"
 
-static const float pi = 3.1415f;
-
-class Hanabi
+class Snow
 {
 private:
 	// DirectX::Çè»ó™
@@ -14,24 +12,24 @@ private:
 
 	ParticleManager* particleM;
 
-	const int numTmp = 50;
-	const float angleTmp = 2.0f * pi / numTmp;
-	const float distanceTmp = 0.5f;
-	int lifeTime;
+	XMFLOAT3 generateLength;
+	int coolTime;
+
+
+private:
+	void GenerateSnow(XMFLOAT3 pos, XMFLOAT3 generateLength, int coolTime, int lifeTime);
 
 public:
 
 	/*const float accel = 1.0f;
 	XMFLOAT3 velocity;*/
 
-	Hanabi();
+	Snow();
 
-	void GenerateHanabi(XMFLOAT3 pos, float scale, int lifeTime);
 
-	void Generate(XMFLOAT3 pos, float scale, int lifeTime);
+	void Generate(XMFLOAT3 pos, XMFLOAT3 generateLength, int coolTime);
 
 	void Update();
-
 	void Draw();
 };
 

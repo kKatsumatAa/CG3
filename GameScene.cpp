@@ -61,7 +61,7 @@ void GameScene::Update()
 	if (input->TriggerKey(DIK_SPACE))
 	{
 		count2++;
-		if (count2 >= 3)count2 = 0;
+		if (count2 >= 4)count2 = 0;
 	}
 
 	debugText.Print("SPACE:mode", 10, 10, 1.0f);
@@ -69,9 +69,10 @@ void GameScene::Update()
 	if (count2 == 0) debugText.Print("colorful", 10, 30, 1.0f);
 	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
 	if (count2 == 2) debugText.Print("hanabi", 10, 30, 1.0f);
-	
+	if (count2 == 3) debugText.Print("snow", 10, 30, 1.0f);
 
-	if (count2 != 2)
+
+	if (count2 == 0 || count2 == 1)
 	{
 		if (count % 5 == 0)
 		{
@@ -113,10 +114,17 @@ void GameScene::Update()
 			}
 		}
 	}
-	else if(count2==2)
+	else if (count2 == 2)
 	{
-		hanabi.Update({0,0,0},0.6f,300);
+		hanabi.Generate(hanabiPos, 0.6f, 300);
 	}
+	else if (count2 == 3)
+	{
+		snow.Generate(hanabiPos, { 10,20,5 }, 0);
+	}
+
+	hanabi.Update();
+	snow.Update();
 
 	//スペースキーを押していたら
 	if (input->PushKey(DIK_SPACE))
@@ -134,6 +142,14 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_S)) { ParticleManager::CameraMoveEyeVector({ 0.0f,-1.0f,0.0f }); }
 		if (input->PushKey(DIK_D)) { ParticleManager::CameraMoveEyeVector({ +1.0f,0.0f,0.0f }); }
 		else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); }
+	}
+
+	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
+	{
+		if (input->PushKey(DIK_UP)) { hanabiPos.y++; }
+		else if (input->PushKey(DIK_DOWN)) { hanabiPos.y--; }
+		if (input->PushKey(DIK_RIGHT)) { hanabiPos.x++; }
+		else if (input->PushKey(DIK_LEFT)) { hanabiPos.x--; }
 	}
 
 
@@ -171,6 +187,7 @@ void GameScene::Draw()
 	// 3Dオブクジェクトの描画
 	particleM->Draw();
 	hanabi.Draw();
+	snow.Draw();
 
 
 	/// <summary>
