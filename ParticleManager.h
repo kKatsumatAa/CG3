@@ -66,6 +66,8 @@ public: // サブクラス
 		XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
 		//
 		XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,1.0f };
+
+		bool isLine = false;
 	};
 
 private: // 定数
@@ -91,7 +93,6 @@ private://01_03
 	Input* input;
 	bool isYBillboard = false;
 
-
 public: // 静的メンバ関数
 	/// <summary>
 	/// 静的初期化
@@ -106,11 +107,13 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+	static void PreDrawLine(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	static void PostDraw();
+	static void PostDrawLine();
 
 	/// <summary>
 	/// 3Dオブジェクト生成
@@ -163,8 +166,10 @@ private: // 静的メンバ変数
 	static ID3D12GraphicsCommandList* cmdList;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootsignature2;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipelinestate2;
 	// デスクリプタヒープ
 	static ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
@@ -244,6 +249,9 @@ public: // メンバ関数
 	/// <param name="startScale"></param>
 	/// <param name="endScale"></param>
 	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
+		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
+
+	void AddLine(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
 		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
 
 private: // メンバ変数

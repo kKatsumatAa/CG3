@@ -48,6 +48,9 @@
     <ClCompile Include="Snow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Rain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\ParticlePixelShader.hlsl">
@@ -63,6 +66,9 @@
       <Filter>シェーダー ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\ParticleGeometryShader.hlsl" />
+    <FxCompile Include="Resources\shaders\LineGeometryShader.hlsl" />
+    <FxCompile Include="Resources\shaders\LinePixelShader.hlsl" />
+    <FxCompile Include="Resources\shaders\LineVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\ParticleShaderHeader.hlsli">
@@ -71,6 +77,7 @@
     <None Include="Resources\shaders\SpriteShaderHeader.hlsli">
       <Filter>シェーダー ファイル</Filter>
     </None>
+    <None Include="Resources\shaders\LineShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sprite.h">
@@ -98,6 +105,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Snow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Rain.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

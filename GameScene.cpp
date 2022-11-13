@@ -61,7 +61,7 @@ void GameScene::Update()
 	if (input->TriggerKey(DIK_SPACE))
 	{
 		count2++;
-		if (count2 >= 4)count2 = 0;
+		if (count2 >= 5)count2 = 0;
 	}
 
 	debugText.Print("SPACE:mode", 10, 10, 1.0f);
@@ -70,6 +70,7 @@ void GameScene::Update()
 	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
 	if (count2 == 2) debugText.Print("hanabi", 10, 30, 1.0f);
 	if (count2 == 3) debugText.Print("snow", 10, 30, 1.0f);
+	if (count2 == 4) debugText.Print("rain", 10, 30, 1.0f);
 
 
 	if (count2 == 0 || count2 == 1)
@@ -122,9 +123,14 @@ void GameScene::Update()
 	{
 		snow.Generate(hanabiPos, { 10,20,5 }, 0);
 	}
+	else
+	{
+		rain.Generate(hanabiPos, { 40,20,10 }, 0);
+	}
 
 	hanabi.Update();
 	snow.Update();
+	rain.Update();
 
 	//スペースキーを押していたら
 	if (input->PushKey(DIK_SPACE))
@@ -185,9 +191,20 @@ void GameScene::Draw()
 	ParticleManager::PreDraw(cmdList);
 
 	// 3Dオブクジェクトの描画
-	particleM->Draw();
-	hanabi.Draw();
-	snow.Draw();
+	if (count2 == 0 || count2 == 1)
+		particleM->Draw();
+	else if (count2 == 2)
+		hanabi.Draw();
+	else if (count2 == 3)
+		snow.Draw();
+
+
+	ParticleManager::PostDraw();
+
+	//線
+	ParticleManager::PreDrawLine(cmdList);
+	if (count2 == 4)
+		rain.Draw();
 
 
 	/// <summary>

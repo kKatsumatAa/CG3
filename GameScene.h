@@ -8,6 +8,7 @@
 #include "DebugText.h"
 #include "Hanabi.h"
 #include "Snow.h"
+#include "Rain.h"
 
 /// <summary>
 /// ゲームシーン
@@ -68,6 +69,7 @@ private: // メンバ変数
 
 	Hanabi hanabi;
 	Snow snow;
+	Rain rain;
 
 	XMFLOAT3 hanabiPos = { 0,0,0 };
 	XMFLOAT3 snowPos = { 0,0,0 };
