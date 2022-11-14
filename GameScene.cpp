@@ -122,50 +122,56 @@ void GameScene::Update()
 						, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
 			}
 		}
+		particleM->Update();
 	}
 	else if (count2 == 2)
 	{
 		hanabi.Generate(hanabiPos, 0.6f, 300);
+		hanabi.Update();
+		
 	}
 	else if (count2 == 3)
 	{
 		snow.Generate(hanabiPos, { 10,20,5 }, 0);
+		snow.Update();
+		
 	}
 	else if (count2 == 4)
 	{
 		rain.Generate(hanabiPos, { 40,20,10 }, 0);
+		rain.Update();
 	}
 	else if (count2 == 5)
 	{
 		if (particleM2->GetParticlesCount() <= 0)
 		{
 			//正面
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
 			//奥					 
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
 			//上					 
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
 			//下				
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
 			//左					
-			particleM2->AddTriangle(300, { 0,0,0 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
 			//右					 
-			particleM2->AddTriangle(300, { 0,0,0 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,0 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,30 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
 			count3 = 0;
 		}
 		particleM2->Update(false);
 		count3++;
+
+		if (count3 >= 60 && count2 == 5)particleM2->Update(true);
 	}
 
-	hanabi.Update();
-	snow.Update();
-	rain.Update();
+	
 
 	//スペースキーを押していたら
 	if (input->PushKey(DIK_SPACE))
@@ -192,11 +198,6 @@ void GameScene::Update()
 		if (input->PushKey(DIK_RIGHT) && hanabiPos.x < 20.0f) { hanabiPos.x++; }
 		else if (input->PushKey(DIK_LEFT) && hanabiPos.x > -20.0f) { hanabiPos.x--; }
 	}
-
-
-	particleM->Update();
-	if (count3 >= 60)particleM2->Update(true);
-
 }
 
 void GameScene::Draw()
