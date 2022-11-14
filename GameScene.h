@@ -66,6 +66,7 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleM;
+	ParticleManager* particleM2;
 
 	Hanabi hanabi;
 	Snow snow;

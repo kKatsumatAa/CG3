@@ -69,6 +69,15 @@
     <FxCompile Include="Resources\shaders\LineGeometryShader.hlsl" />
     <FxCompile Include="Resources\shaders\LinePixelShader.hlsl" />
     <FxCompile Include="Resources\shaders\LineVertexShader.hlsl" />
+    <FxCompile Include="Resources\shaders\TriangleGeometryShader.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\TrianglePixelShader.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\TriangleVertexShader.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\ParticleShaderHeader.hlsli">
@@ -78,6 +87,9 @@
       <Filter>シェーダー ファイル</Filter>
     </None>
     <None Include="Resources\shaders\LineShaderHeader.hlsli" />
+    <None Include="Resources\shaders\TriangleShaderHeader.hlsli">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sprite.h">

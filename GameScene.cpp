@@ -13,6 +13,7 @@ GameScene::~GameScene()
 	delete spriteBG;
 
 	delete particleM;
+	delete particleM2;
 
 	delete sprite1;
 	delete sprite2;
@@ -47,13 +48,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	// 3Dオブジェクト生成
 
 	particleM = ParticleManager::Create();
+	particleM2 = ParticleManager::Create();
 	particleM->Update();
+	particleM2->Update();
 
 	particleM->SetEye({ 0, 0, -30 });
+	particleM2->SetEye({ 0, 0, -30 });
+
+
 }
 
 int count = 0;
 int count2 = 0;
+int count3 = 0;
 void GameScene::Update()
 {
 	count++;
@@ -61,16 +68,17 @@ void GameScene::Update()
 	if (input->TriggerKey(DIK_SPACE))
 	{
 		count2++;
-		if (count2 >= 5)count2 = 0;
+		if (count2 >= 6)count2 = 0;
 	}
 
 	debugText.Print("SPACE:mode", 10, 10, 1.0f);
 
 	if (count2 == 0) debugText.Print("colorful", 10, 30, 1.0f);
 	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
-	if (count2 == 2) debugText.Print("hanabi", 10, 30, 1.0f);
+	if (count2 == 2) debugText.Print("hanabi(wait)", 10, 30, 1.0f);
 	if (count2 == 3) debugText.Print("snow", 10, 30, 1.0f);
 	if (count2 == 4) debugText.Print("rain", 10, 30, 1.0f);
+	if (count2 == 5) debugText.Print("cube(wait)", 10, 30, 1.0f);
 
 
 	if (count2 == 0 || count2 == 1)
@@ -123,9 +131,36 @@ void GameScene::Update()
 	{
 		snow.Generate(hanabiPos, { 10,20,5 }, 0);
 	}
-	else
+	else if (count2 == 4)
 	{
 		rain.Generate(hanabiPos, { 40,20,10 }, 0);
+	}
+	else if (count2 == 5)
+	{
+		if (particleM2->GetParticlesCount() <= 0)
+		{
+			//正面
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+			//奥					 
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+			//上					 
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+			//下				
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+			//左					
+			particleM2->AddTriangle(300, { 0,0,0 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+			//右					 
+			particleM2->AddTriangle(300, { 0,0,0 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+			particleM2->AddTriangle(300, { 0,0,0 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+			count3 = 0;
+		}
+		particleM2->Update(false);
+		count3++;
 	}
 
 	hanabi.Update();
@@ -152,14 +187,15 @@ void GameScene::Update()
 
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
 	{
-		if (input->PushKey(DIK_UP)) { hanabiPos.y++; }
-		else if (input->PushKey(DIK_DOWN)) { hanabiPos.y--; }
-		if (input->PushKey(DIK_RIGHT)) { hanabiPos.x++; }
-		else if (input->PushKey(DIK_LEFT)) { hanabiPos.x--; }
+		if (input->PushKey(DIK_UP) && hanabiPos.y < 10.0f) { hanabiPos.y++; }
+		else if (input->PushKey(DIK_DOWN) && hanabiPos.y > -10.0f) { hanabiPos.y--; }
+		if (input->PushKey(DIK_RIGHT) && hanabiPos.x < 20.0f) { hanabiPos.x++; }
+		else if (input->PushKey(DIK_LEFT) && hanabiPos.x > -20.0f) { hanabiPos.x--; }
 	}
 
 
 	particleM->Update();
+	if (count3 >= 60)particleM2->Update(true);
 
 }
 
@@ -205,6 +241,13 @@ void GameScene::Draw()
 	ParticleManager::PreDrawLine(cmdList);
 	if (count2 == 4)
 		rain.Draw();
+
+	ParticleManager::PostDraw();
+
+	//三角形
+	ParticleManager::PreDrawTriangle(cmdList);
+	if (count2 == 5)
+		particleM2->Draw();
 
 
 	/// <summary>

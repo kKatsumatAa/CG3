@@ -29,6 +29,7 @@ public: // サブクラス
 		XMFLOAT3 pos; // xyz座標
 		float scale;
 		XMFLOAT4 color;
+		XMFLOAT4 normal;
 	};
 
 	// 定数バッファ用データ構造体
@@ -61,13 +62,16 @@ public: // サブクラス
 		//最終値
 		float e_scale = 0.0f;
 		//
-		XMFLOAT4 color = {1.0f,1.0f,1.0f,1.0f};
+		XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 		//
 		XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
 		//
 		XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,1.0f };
 
 		bool isLine = false;
+
+		//三角形を立方体のどの位置に置くか
+		XMFLOAT4 normalAndSide;
 	};
 
 private: // 定数
@@ -108,12 +112,12 @@ public: // 静的メンバ関数
 	/// <param name="cmdList">描画コマンドリスト</param>
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 	static void PreDrawLine(ID3D12GraphicsCommandList* cmdList);
+	static void PreDrawTriangle(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	static void PostDraw();
-	static void PostDrawLine();
 
 	/// <summary>
 	/// 3Dオブジェクト生成
@@ -167,9 +171,11 @@ private: // 静的メンバ変数
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	static ComPtr<ID3D12RootSignature> rootsignature2;
+	static ComPtr<ID3D12RootSignature> rootsignature3;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 	static ComPtr<ID3D12PipelineState> pipelinestate2;
+	static ComPtr<ID3D12PipelineState> pipelinestate3;
 	// デスクリプタヒープ
 	static ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
@@ -232,7 +238,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	void Update(bool isParticleMove = true);
 
 	/// <summary>
 	/// 描画
@@ -248,11 +254,15 @@ public: // メンバ関数
 	/// <param name="accel"></param>
 	/// <param name="startScale"></param>
 	/// <param name="endScale"></param>
-	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
+	void Add(int life, XMFLOAT3 pos, XMFLOAT3 velocity = { 0,0,0 }, XMFLOAT3 accel = { 0,0,0 },
+		float startScale = 1.0f, float endScale = 0, XMFLOAT4 startColor = { 1,1,1,1 }, XMFLOAT4 endColor = { 0,0,0,0 });
 
-	void AddLine(int life, XMFLOAT3 pos, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
+	void AddTriangle(int life, XMFLOAT3 pos, XMFLOAT4 normalAndSide, XMFLOAT3 velocity = { 0,0,0 }, XMFLOAT3 accel = { 0,0,0 },
+		float startScale = 1.0f, float endScale = 0, XMFLOAT4 startColor = { 1,1,1,1 }, XMFLOAT4 endColor = { 0,0,0,0 });
+
+	std::forward_list<Particle> GetParticles() { return particles; }
+
+	int GetParticlesCount();
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
