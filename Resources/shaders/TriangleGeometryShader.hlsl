@@ -100,7 +100,7 @@ void main(
 	for (int i = 0; i < vnum; i++)
 	{
 
-		float4 offset;
+		float4 offset = { 0,0,0,0 };
 
 		//³–Ê‚Ì–Ê‚ÌŽž
 		if (input[0].normal.b < 0)

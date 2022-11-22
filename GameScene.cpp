@@ -56,6 +56,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	particleM2->SetEye({ 0, 0, -30 });
 
 
+	{
+		//正面
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+		//奥					 
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+		//上					 
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+		//下				
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+		//左					
+		particleM2->AddTriangle(300, { -10,0,0 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+		//右					 
+		particleM2->AddTriangle(300, { -10,0,0 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+		particleM2->AddTriangle(300, { -10,0,0 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+	}
 }
 
 int count = 0;
@@ -65,121 +85,11 @@ void GameScene::Update()
 {
 	count++;
 
+	//演出切り替え
 	if (input->TriggerKey(DIK_SPACE))
 	{
 		count2++;
 		if (count2 >= 6)count2 = 0;
-	}
-
-	debugText.Print("SPACE:mode", 10, 10, 1.0f);
-
-	if (count2 == 0) debugText.Print("colorful", 10, 30, 1.0f);
-	if (count2 == 1) debugText.Print("gradation", 10, 30, 1.0f);
-	if (count2 == 2) debugText.Print("hanabi(wait)", 10, 30, 1.0f);
-	if (count2 == 3) debugText.Print("snow", 10, 30, 1.0f);
-	if (count2 == 4) debugText.Print("rain", 10, 30, 1.0f);
-	if (count2 == 5) debugText.Print("cube(wait)", 10, 30, 1.0f);
-
-
-	if (count2 == 0 || count2 == 1)
-	{
-		if (count % 5 == 0)
-		{
-			for (int i = 0; i < 100; i++)
-			{
-				//XYZ全て[-5.0f~+5.0f]でランダムに分布
-				const float md_pos = 10.0f;
-				XMFLOAT3 pos{};
-				pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-				pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-				pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-
-				//XYZ全て[-0.05~+0.05f]でランダムに分布
-				const float md_vel = 0.1f;
-				XMFLOAT3 vel{};
-				vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-				vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-				vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-
-				//重力に見立ててYのみ[-0.001f~0]でランダムに
-				XMFLOAT3 acc{};
-				const float md_acc = 0.001f;
-				acc.y = -(float)rand() / RAND_MAX * md_acc;
-
-				//色
-				XMFLOAT4 color{};
-				const float md_color = 1.0f;
-				color.x = (float)rand() / RAND_MAX * md_color;
-				color.y = (float)rand() / RAND_MAX * md_color;
-				color.z = (float)rand() / RAND_MAX * md_color;
-				color.w = (float)rand() / RAND_MAX * md_color;
-
-				if (count2 == 0)
-					particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
-						, color, color);
-				else if (count2 == 1)
-					particleM->Add(180, pos, vel, acc, 1.0f, 0.0f
-						, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
-			}
-		}
-		particleM->Update();
-	}
-	else if (count2 == 2)
-	{
-		hanabi.Generate(hanabiPos, 0.6f, 300);
-		hanabi.Update();
-		
-	}
-	else if (count2 == 3)
-	{
-		snow.Generate(hanabiPos, { 10,20,5 }, 0);
-		snow.Update();
-		
-	}
-	else if (count2 == 4)
-	{
-		rain.Generate(hanabiPos, { 40,20,10 }, 0);
-		rain.Update();
-	}
-	else if (count2 == 5)
-	{
-		if (particleM2->GetParticlesCount() <= 0)
-		{
-			//正面
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
-			//奥					 
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
-			//上					 
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
-			//下				
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
-			//左					
-			particleM2->AddTriangle(300, { 0,0,30 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
-			//右					 
-			particleM2->AddTriangle(300, { 0,0,30 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
-			particleM2->AddTriangle(300, { 0,0,30 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
-			count3 = 0;
-		}
-		particleM2->Update(false);
-		count3++;
-
-		if (count3 >= 60 && count2 == 5)particleM2->Update(true);
-	}
-
-	
-
-	//スペースキーを押していたら
-	if (input->PushKey(DIK_SPACE))
-	{
-		XMFLOAT2 pos = sprite1->GetPos();
-		pos.x += 1.0f;
-
-		sprite1->SetPosition(pos);
 	}
 
 	// カメラ移動
@@ -191,12 +101,131 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); }
 	}
 
+	//エミッターのpos移動
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
 	{
 		if (input->PushKey(DIK_UP) && hanabiPos.y < 10.0f) { hanabiPos.y++; }
 		else if (input->PushKey(DIK_DOWN) && hanabiPos.y > -10.0f) { hanabiPos.y--; }
 		if (input->PushKey(DIK_RIGHT) && hanabiPos.x < 20.0f) { hanabiPos.x++; }
 		else if (input->PushKey(DIK_LEFT) && hanabiPos.x > -20.0f) { hanabiPos.x--; }
+	}
+
+
+	//生成
+	{
+		if (count2 == 0 || count2 == 1)
+		{
+			if (count % 5 == 0)
+			{
+				for (int i = 0; i < 100; i++)
+				{
+					//XYZ全て[-5.0f~+5.0f]でランダムに分布
+					const float md_pos = 10.0f;
+					XMFLOAT3 pos{};
+					pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+					pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+					pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+
+					//XYZ全て[-0.05~+0.05f]でランダムに分布
+					const float md_vel = 0.1f;
+					XMFLOAT3 vel{};
+					vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+					vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+					vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+
+					//重力に見立ててYのみ[-0.001f~0]でランダムに
+					XMFLOAT3 acc{};
+					const float md_acc = 0.001f;
+					acc.y = -(float)rand() / RAND_MAX * md_acc;
+
+					//色
+					XMFLOAT4 color{};
+					const float md_color = 1.0f;
+					color.x = (float)rand() / RAND_MAX * md_color;
+					color.y = (float)rand() / RAND_MAX * md_color;
+					color.z = (float)rand() / RAND_MAX * md_color;
+					color.w = (float)rand() / RAND_MAX * md_color;
+
+					if (count2 == 0)
+						particleM->Add(60, pos, vel, acc, 1.0f, 0.0f
+							, color, color);
+					else if (count2 == 1)
+						particleM->Add(180, pos, vel, acc, 1.0f, 0.0f
+							, { 0.0f,0.0f,1.0f,1.0f }, { 1.0f,1,0,1.0f });
+				}
+			}
+		}
+		else if (count2 == 2)
+		{
+			hanabi.Generate(hanabiPos, 0.6f, 300);
+		}
+		else if (count2 == 3)
+		{
+			snow.Generate(hanabiPos, { 10,20,5 }, 0);
+		}
+		else if (count2 == 4)
+		{
+			rain.Generate(hanabiPos, { 40,20,10 }, 0);
+		}
+		{
+			if (particleM2->GetParticlesCount() <= 0)
+			{
+				//正面
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, -1, -1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, -1, 1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+				//奥					 
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, 1, -1 }, { 0, 0, 0.3f }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 0, 1, 1 }, { 0, 0, -0.3f }, { 0,-0.005f,0 });
+				//上					 
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 1, 0, -1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, 1, 0, 1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+				//下				
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, -1, 0, -1 }, { 0, -0.3f, 0 }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { 0, -1, 0, 1 }, { 0, 0.3f, 0 }, { 0,-0.005f,0 });
+				//左					
+				particleM2->AddTriangle(300, { -10,0,0 }, { -1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { -1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+				//右					 
+				particleM2->AddTriangle(300, { -10,0,0 }, { 1, 0, 0, -1 }, { -0.3f, 0, 0 }, { 0,-0.005f,0 });
+				particleM2->AddTriangle(300, { -10,0,0 }, { 1, 0, 0, 1 }, { 0.3f, 0, 0 }, { 0,-0.005f,0 });
+				count3 = 0;
+			}
+
+		}
+	}
+
+	//アップデート
+	{
+		particleM->Update();
+		hanabi.Update();
+		snow.Update();
+		rain.Update();
+		particleM2->Update(false);
+
+		if (count2 == 5)
+		{
+			count3++;
+		}
+		if (count3 >= 60)particleM2->Update(true);
+	}
+
+
+	//デバッグテキスト
+	{
+		debugText.Print("SPACE:mode", 10, 10, 1.0f);
+
+		if (count2 == 0) { debugText.Print("[colorful]", 10, 30, 1.0f); }
+		if (count2 == 1) { debugText.Print("[gradation]", 10, 30, 1.0f); }
+		if (count2 == 2) { debugText.Print("[hanabi(wait)]", 10, 30, 1.0f); }
+		if (count2 == 3) { debugText.Print("[snow]", 10, 30, 1.0f); }
+		if (count2 == 4) { debugText.Print("[rain]", 10, 30, 1.0f); }
+		if (count2 == 5) { debugText.Print("[cube(wait)]", 10, 30, 1.0f); }
+
+		debugText.Print("WASD:camera", 10, 50, 1.0f);
+		if (count2 >= 2 && count2 <= 4)
+		{
+			debugText.Print("ARROW:emitter", 10, 70, 1.0f);
+		}
 	}
 }
 
@@ -247,8 +276,8 @@ void GameScene::Draw()
 
 	//三角形
 	ParticleManager::PreDrawTriangle(cmdList);
-	if (count2 == 5)
-		particleM2->Draw();
+	//if(count2 == 5)
+	particleM2->Draw();
 
 
 	/// <summary>
